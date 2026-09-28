@@ -10,6 +10,22 @@
   const hero = $('.hero');
   $$('.hero__first span').forEach((s, i) => s.style.setProperty('--i', i));
   $$('.hero__last span').forEach((s, i) => s.style.setProperty('--i', i));
+  // głębia: scroll i ruch myszy przesuwają portret i nazwisko z różną prędkością
+  if (!reduce) {
+    const fig = $('.hero__fig'), last = $('.hero__last');
+    let mx = 0, my = 0, sy = 0, raf = 0;
+    const figBase = () => getComputedStyle(fig).getPropertyValue('--fx') || '';
+    const apply = () => {
+      raf = 0;
+      const h = hero.offsetHeight, p = Math.min(sy / h, 1);
+      fig.style.translate = `${mx * 10}px ${p * -60 + my * 6}px`;
+      last.style.translate = `${mx * -18}px 0`;
+    };
+    const req = () => { if (!raf) raf = requestAnimationFrame(apply); };
+    addEventListener('scroll', () => { sy = scrollY; if (sy < hero.offsetHeight * 1.2) req(); }, { passive: true });
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) hero.addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; req(); });
+    setTimeout(() => hero.classList.add('is-hit'), 1150);
+  }
   const heroReady = () => {
     hero.classList.add('is-ready');
     $$('[data-paste]', hero).forEach((el, i) => setTimeout(() => el.classList.add('is-in'), reduce ? 0 : 380 + i * 140));

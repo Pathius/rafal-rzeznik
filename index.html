@@ -13,7 +13,7 @@
 <link rel="preload" href="assets/fonts/BigShouldersDisplay-900-latin-ext.woff2" as="font" type="font/woff2" crossorigin>
 <script>document.documentElement.classList.add('js')</script>
 <link rel="stylesheet" href="assets/fonts/fonts.css">
-<link rel="stylesheet" href="assets/css/style.css?v=1790612163">
+<link rel="stylesheet" href="assets/css/style.css?v=1790619591">
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' fill='%23d12941'/%3E%3Ctext x='32' y='46' font-family='Arial Black,Arial' font-weight='900' font-size='34' text-anchor='middle' fill='white'%3ERR%3C/text%3E%3C/svg%3E">
 </head>
 <body>
@@ -21,7 +21,7 @@
 THESIS: Strona to plakat gali, na którym main eventem jest trener, a zapis na trening to „Twoja walka”. Odrzuca szablon fitness: hero ze stockiem, trzy karty usług, formularz kontaktowy.
 OWN-WORLD: czarny grunt i złamana biel papieru plakatowego, karmin #D12941 z jego belek na IG, czarno-białe zdjęcia z czerwonymi bandażami. Kondensowany grotesk Big Shoulders 900 wersalikami, Montserrat na belkach i w tekście. Belki naklejane jak paski plakatu, karta walk z liniami zamiast kart.
 STORY: widzę byłego zawodnika z realnym dorobkiem, rozumiem, że uczy od zera 1:1, sprawdzam ofertę i pierwszy trening, rezerwuję termin bez pisania w DM.
-FIRST VIEWPORT: afisz: po lewej RAFAŁ / RZEŹNIK pełnym kondensowanym groteskiem, hasło, CTA i liczby; po prawej nieprzecięty portret z czerwonymi bandażami i belką z IG; u dołu czerwony pasek z adresem, godzinami i „Umów trening”.
+FIRST VIEWPORT: plakat walki: nocna arena w tle, duży portret z czerwonymi bandażami, przed nim u dołu RZEŹNIK na całą szerokość (zawsze czytelny); lewa góra RAFAŁ, hasło i CTA; czerwony pasek z adresem.
 FORM: Plakat walki (pozycja 1 na mojej liście), seed 9dbcbc63.
 FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
 -->
@@ -66,38 +66,37 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 <main id="tresc">
 
 <!-- ===== HERO: PLAKAT ===== -->
-<section class="hero" id="start" aria-labelledby="hero-title">
+<section class="hero" id="start" aria-labelledby="hero-title" data-hero>
+  <div class="hero__arena" aria-hidden="true"></div>
+  <div class="hero__spot" aria-hidden="true"></div>
   <div class="hero__grain" aria-hidden="true"></div>
 
-  <div class="hero__bill">
-    <h1 class="hero__title" id="hero-title">
-      <span class="hero__first" aria-label="Rafał"><span>R</span><span>A</span><span>F</span><span>A</span><span>Ł</span></span>
-      <span class="hero__last" aria-label="Rzeźnik"><span>R</span><span>Z</span><span>E</span><span>Ź</span><span>N</span><span>I</span><span>K</span></span>
-    </h1>
-    <p class="hero__lead">Nauczę Cię boksu.<br>Od pierwszej gardy po sparing.</p>
-    <div class="hero__actions">
-      <a class="btn btn--red btn--big" href="#rezerwacja" data-book>Umów trening <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
-      <a class="btn btn--line-light btn--big" href="#treningi">Zobacz treningi</a>
-    </div>
-    <dl class="hero__tape">
-      <div><dt>W boksie</dt><dd>16 lat</dd></div>
-      <div><dt>Jako trener</dt><dd>9 lat</dd></div>
-      <div><dt>Walki amatorskie</dt><dd>ok. 100</dd></div>
-    </dl>
+  <h1 class="hero__title" id="hero-title">
+    <span class="hero__first" aria-label="Rafał"><span>R</span><span>A</span><span>F</span><span>A</span><span>Ł</span></span>
+    <span class="hero__last" aria-label="Rzeźnik" data-depth="-1"><span>R</span><span>Z</span><span>E</span><span>Ź</span><span>N</span><span>I</span><span>K</span></span>
+  </h1>
+
+  <div class="hero__intro">
+    <p class="hero__lead">Nauczę Cię boksu.<span>Treningi personalne 1:1 w Lublinie, od pierwszej gardy po sparing.</span></p>
   </div>
 
-  <figure class="hero__fig">
+  <dl class="hero__tape">
+    <div><dt>W boksie</dt><dd>16 lat</dd></div>
+    <div><dt>Jako trener</dt><dd>9 lat</dd></div>
+    <div><dt>Walki amatorskie</dt><dd>ok. 100</dd></div>
+  </dl>
+
+  <figure class="hero__fig" data-depth="1">
     <img class="hero__cut" src="assets/img/rafal-cutout.webp" width="1300" height="1689" alt="Rafał Rzeźnik w gardzie, w czerwonych bandażach bokserskich" fetchpriority="high">
-    <figcaption class="hero__belts">
-      <span class="belt belt--red" data-paste>Trener boksu · Lublin</span>
-      <span class="belt belt--ink" data-paste>Treningi personalne 1:1 · sparingi</span>
-    </figcaption>
   </figure>
 
-  <div class="hero__strip" data-paste>
+  <div class="hero__strip">
     <p><svg aria-hidden="true"><use href="#i-pin"/></svg>ul. Bolesława Prusa 8C, Lublin</p>
     <p><svg aria-hidden="true"><use href="#i-clock"/></svg>pon.–pt. 6:30–21:00</p>
-    <a class="btn btn--ink hero__cta" href="#rezerwacja" data-book>Umów trening <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    <div class="hero__ctas">
+      <a class="btn btn--line-light hero__price" href="#treningi">Cennik</a>
+      <a class="btn btn--ink hero__cta" href="#rezerwacja" data-book>Umów trening <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
+    </div>
   </div>
 </section>
 
@@ -445,6 +444,6 @@ FINISH: unreviewed and undocumented is unfinished; this build ends with the fini
 
 <a class="dock" href="#rezerwacja" data-book data-dock>Umów trening <svg aria-hidden="true"><use href="#i-arrow"/></svg></a>
 
-<script src="assets/js/main.js?v=1790612163" defer></script>
+<script src="assets/js/main.js?v=1790619367" defer></script>
 </body>
 </html>
