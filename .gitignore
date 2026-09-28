@@ -1,0 +1,17 @@
+# publikujemy tylko stronę
+*
+!index.html
+!.nojekyll
+!.gitignore
+!assets/
+!assets/**
+.DS_Store
+assets/img/berej-boxing.jpg
+assets/img/gala-prezentacja.jpg
+assets/img/konferencja.jpg
+assets/img/sala-footwork-worek.jpg
+assets/img/sala-footwork.jpg
+assets/img/sala-pady.jpg
+assets/img/sala-para-dystans.jpg
+assets/img/sala-tarcze-para.jpg
+assets/img/sala-worek.jpg
