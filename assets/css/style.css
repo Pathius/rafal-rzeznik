@@ -619,9 +619,9 @@ section { padding: clamp(3rem, 5.5vw, 5rem) var(--pad); }
   /* Hero: RAFAŁ i RZEŹNIK razem u góry; czerwony pasek dopiero pod pierwszym ekranem */
   .hero { --strip: 7.4rem; --fs-first: 13vw; --fs-last: 17.5vw; height: calc(max(100svh, 620px) + var(--strip)); }
   .hero__first { top: calc(var(--nav) + 1.1rem); }
-  .hero__last { top: calc(var(--nav) + 1.1rem + var(--fs-first) * .9); bottom: auto; left: var(--pad); right: auto; justify-content: flex-start; line-height: .8; }
-  .hero__intro { top: calc(var(--nav) + 1.1rem + var(--fs-first) * .9 + var(--fs-last) * .82 + 1.1rem); }
-  .hero__fig { height: calc(100% - var(--strip) - var(--nav) - 1.1rem - var(--fs-first) * .9 - var(--fs-last) * .82 - 10.5rem); max-height: 120vw; }
+  .hero__last { top: calc(var(--nav) + 1.1rem + var(--fs-first) * 1.02); bottom: auto; left: var(--pad); right: auto; justify-content: flex-start; line-height: .8; }
+  .hero__intro { top: calc(var(--nav) + 1.1rem + var(--fs-first) * 1.02 + var(--fs-last) * .82 + 1.1rem); }
+  .hero__fig { height: calc(100% - var(--strip) - var(--nav) - 1.1rem - var(--fs-first) * 1.02 - var(--fs-last) * .82 - 10.5rem); max-height: 120vw; }
   .hero__strip { padding: .9rem var(--pad) 1rem; gap: .5rem; }
   .hero__strip > p { display: flex; justify-content: space-between; }
   .hero__strip { display: grid; grid-template-columns: 1fr auto; align-items: center; }
