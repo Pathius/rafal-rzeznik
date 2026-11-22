@@ -1,6 +1,18 @@
 # publikujemy tylko stronę
 *
 !index.html
+!druzyna/
+!druzyna/index.html
+!trening-probny/
+!trening-probny/index.html
+!pierwszy-trening/
+!pierwszy-trening/index.html
+!pytania/
+!pytania/index.html
+!o-mnie/
+!o-mnie/index.html
+!kontakt/
+!kontakt/index.html
 !.nojekyll
 !.gitignore
 !assets/

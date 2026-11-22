@@ -1,5 +1,5 @@
 /* Rafał Rzeźnik – Trener Boksu Lublin
-   Mockup bez modułu rezerwacji: umawianie przez telefon, SMS i Instagram. */
+   Strona wielostronicowa (tools/build.py); każdy blok uruchamia się tylko, gdy jest na stronie. */
 (() => {
   'use strict';
   const $ = (s, r = document) => r.querySelector(s);
@@ -7,29 +7,31 @@
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const canHover = matchMedia('(hover: hover) and (pointer: fine)').matches;
 
-  /* ---------- Hero: wejście plakatu ---------- */
+  /* ---------- Hero: wejście plakatu (tylko strona główna) ---------- */
   const hero = $('.hero');
-  $$('.hero__first span').forEach((s, i) => s.style.setProperty('--i', i));
-  $$('.hero__last span').forEach((s, i) => s.style.setProperty('--i', i));
-  // głębia: scroll i ruch myszy przesuwają portret i nazwisko z różną prędkością
-  if (!reduce) {
-    const fig = $('.hero__fig'), last = $('.hero__last');
-    let mx = 0, my = 0, sy = 0, raf = 0;
-    const apply = () => {
-      raf = 0;
-      const p = Math.min(sy / hero.offsetHeight, 1);
-      fig.style.translate = `${mx * 10}px ${p * -60 + my * 6}px`;
-      last.style.translate = `${mx * -18}px 0`;
-    };
-    const req = () => { if (!raf) raf = requestAnimationFrame(apply); };
-    addEventListener('scroll', () => { sy = scrollY; if (sy < hero.offsetHeight * 1.2) req(); }, { passive: true });
-    if (canHover) hero.addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; req(); });
+  if (hero) {
+    $$('.hero__first span').forEach((s, i) => s.style.setProperty('--i', i));
+    $$('.hero__last span').forEach((s, i) => s.style.setProperty('--i', i));
+    // głębia: scroll i ruch myszy przesuwają portret i nazwisko z różną prędkością
+    if (!reduce) {
+      const fig = $('.hero__fig'), last = $('.hero__last');
+      let mx = 0, my = 0, sy = 0, raf = 0;
+      const apply = () => {
+        raf = 0;
+        const p = Math.min(sy / hero.offsetHeight, 1);
+        fig.style.translate = `${mx * 10}px ${p * -60 + my * 6}px`;
+        last.style.translate = `${mx * -18}px 0`;
+      };
+      const req = () => { if (!raf) raf = requestAnimationFrame(apply); };
+      addEventListener('scroll', () => { sy = scrollY; if (sy < hero.offsetHeight * 1.2) req(); }, { passive: true });
+      if (canHover) hero.addEventListener('pointermove', e => { mx = e.clientX / innerWidth - .5; my = e.clientY / innerHeight - .5; req(); });
+    }
+    const cut = $('.hero__cut');
+    Promise.race([
+      Promise.all([document.fonts ? document.fonts.ready : Promise.resolve(), cut.decode ? cut.decode().catch(() => {}) : Promise.resolve()]),
+      new Promise(r => setTimeout(r, 1400))
+    ]).then(() => hero.classList.add('is-ready'));
   }
-  const cut = $('.hero__cut');
-  Promise.race([
-    Promise.all([document.fonts ? document.fonts.ready : Promise.resolve(), cut.decode ? cut.decode().catch(() => {}) : Promise.resolve()]),
-    new Promise(r => setTimeout(r, 1400))
-  ]).then(() => hero.classList.add('is-ready'));
 
   /* ---------- Belki ---------- */
   const pasteIO = new IntersectionObserver(entries => entries.forEach(e => {
@@ -38,22 +40,31 @@
   $$('[data-paste]').forEach(el => pasteIO.observe(el));
 
   /* ---------- Nawigacja + dok ---------- */
-  const nav = $('[data-nav]'), dock = $('[data-dock]'), contactSec = $('#kontakt');
-  let contactVisible = false;
-  // dok chowa się, gdy widać kontakt (tam są telefon, SMS i IG)
-  new IntersectionObserver(([e]) => { contactVisible = e.isIntersecting; onScroll(); }, { threshold: 0, rootMargin: '0px 0px -10% 0px' }).observe(contactSec);
+  const nav = $('[data-nav]'), dock = $('[data-dock]'), foot = $('.site-foot');
+  const solid = nav.classList.contains('is-solid');
+  let footVisible = false;
+  // dok chowa się nad stopką, żeby nie zasłaniał linków
+  if (dock) new IntersectionObserver(([e]) => { footVisible = e.isIntersecting; onScroll(); }).observe(foot);
   function onScroll() {
     const y = scrollY;
-    nav.classList.toggle('is-solid', y > 24);
-    dock.classList.toggle('is-shown', y > hero.offsetHeight * 0.75 && !contactVisible);
+    if (!solid) nav.classList.toggle('is-solid', y > 24);
+    if (dock) dock.classList.toggle('is-shown', y > (hero ? hero.offsetHeight * 0.75 : 160) && !footVisible);
   }
   addEventListener('scroll', onScroll, { passive: true }); onScroll();
 
-  const links = $$('.nav__links a');
-  const secIO = new IntersectionObserver(entries => entries.forEach(e => {
-    if (e.isIntersecting) links.forEach(a => a.classList.toggle('is-here', a.getAttribute('href') === '#' + e.target.id));
-  }), { rootMargin: '-45% 0px -50% 0px' });
-  links.forEach(a => { const s = $(a.getAttribute('href')); if (s) secIO.observe(s); });
+  // menu na telefonie i tablecie
+  const burger = $('[data-burger]'), menu = $('#menu');
+  const setMenu = open => {
+    nav.classList.toggle('is-open', open);
+    document.body.classList.toggle('menu-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+    burger.setAttribute('aria-label', open ? 'Zamknij menu' : 'Otwórz menu');
+    if (open) $('a', menu).focus();
+  };
+  burger.addEventListener('click', () => setMenu(!nav.classList.contains('is-open')));
+  addEventListener('keydown', e => { if (e.key === 'Escape' && nav.classList.contains('is-open')) { setMenu(false); burger.focus(); } });
+  menu.addEventListener('click', e => { if (e.target.closest('a')) setMenu(false); });
+  matchMedia('(min-width: 1201px)').addEventListener('change', e => { if (e.matches) setMenu(false); });
 
   /* ---------- Wideo: wspólna logika (rundy i film z Pawłem) ---------- */
   function videoBox(box, { hoverPlay }) {
@@ -150,5 +161,33 @@
     });
   });
 
-  $('[data-year]').textContent = new Date().getFullYear();
+  /* ---------- Przejście między podstronami: seria trzech belek ---------- */
+  {
+    const root = document.documentElement, curtain = $('.punch');
+    const KEY = 'rr-punch';
+    const store = v => { try { v ? sessionStorage.setItem(KEY, '1') : sessionStorage.removeItem(KEY); } catch {} };
+    // przyjazd: belki zakrywają (klasa z <head>), zjeżdżają, gdy strona gotowa
+    if (root.classList.contains('is-arriving')) {
+      store(false);
+      requestAnimationFrame(() => requestAnimationFrame(() => root.classList.add('is-out')));
+      setTimeout(() => root.classList.remove('is-arriving', 'is-out'), 1000);
+    }
+    // wyjazd: tylko zwykłe kliknięcia w linki do innych podstron tej witryny
+    if (curtain && !reduce) document.addEventListener('click', e => {
+      const a = e.target.closest('a[href]');
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || a.target === '_blank' || a.hasAttribute('download')) return;
+      const url = new URL(a.href, location.href);
+      if (url.origin !== location.origin || !/^https?:$/.test(url.protocol)) return;
+      if (url.pathname === location.pathname) return;          // ta sama strona / kotwica
+      e.preventDefault();
+      root.classList.remove('is-arriving', 'is-out');
+      root.classList.add('is-leaving');
+      store(true);
+      setTimeout(() => { location.href = url.href; }, 720);
+    });
+    // powrót przyciskiem „wstecz” (bfcache): zdejmij zasłonę
+    addEventListener('pageshow', e => { if (e.persisted) { root.classList.remove('is-leaving', 'is-arriving', 'is-out'); store(false); } });
+  }
+
+  $$('[data-year]').forEach(el => { el.textContent = new Date().getFullYear(); });
 })();
